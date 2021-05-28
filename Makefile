@@ -1,4 +1,6 @@
 VERSION ?= $(shell git describe --tags --always --dirty --match=v* 2> /dev/null || echo "1.0.0")
+LDFLAGS := -ldflags "-X main.Version=${VERSION}"
+MODULE = $(shell go list -m)
 
 .PHONY: default
 default: help
@@ -13,9 +15,12 @@ test: ## run unit tests
 
 .PHONY: run
 run: ## run the API server
+	go run ${LDFLAGS} cmd/server/main.go
 
 .PHONY: build
 build:  ## build the API server binary
+	mkdir -p build
+	CGO_ENABLED=0 go build ${LDFLAGS} -a -o build/server $(MODULE)/cmd/server
 
 .PHONY: build-docker
 build-docker: ## build the API server as a docker image
