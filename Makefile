@@ -1,6 +1,7 @@
 VERSION ?= $(shell git describe --tags --always --dirty --match=v* 2> /dev/null || echo "1.0.0")
 LDFLAGS := -ldflags "-X main.Version=${VERSION}"
 MODULE = $(shell go list -m)
+PACKAGES := $(shell go list ./... | grep -v /vendor/)
 
 .PHONY: default
 default: help
@@ -12,6 +13,15 @@ help: ## help information about make commands
 
 .PHONY: test
 test: ## run unit tests
+	@echo "mode: count" > coverage-all.out
+	@CGO_ENABLED=0 $(foreach pkg,$(PACKAGES), \
+		CGO_ENABLED=0 go test -p=1 -cover -covermode=count -coverprofile=coverage.out ${pkg}; \
+		tail -n +2 coverage.out >> coverage-all.out;)
+
+.PHONY: test-cover
+test-cover: test ## run unit tests and show test coverage information
+	go tool cover -html=coverage-all.out
+
 
 .PHONY: run
 run: ## run the API server

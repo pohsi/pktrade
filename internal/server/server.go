@@ -1,20 +1,40 @@
+// Package server provides running server and handle API request
 package server
 
 import (
-	"fmt"
-
 	"github.com/pohsi/pktrade/pkg/log"
 )
 
-type Server struct {
+// Server is the major be responsible for run and handle rest request
+type Server interface {
+	Run() error
+
+	Port() int
+}
+
+type concreteServer struct {
 	logger log.Logger
+	config Config
 }
 
-func New(logger log.Logger) *Server {
-	return &Server{logger: logger}
+type Config struct {
+	Port   int
+	Logger log.Logger
 }
 
-func (s Server) Run() int {
-	fmt.Println("server run")
-	return 0
+// New creates server instance wich takes custom logger
+func New(cfg Config) (Server, error) {
+
+	if cfg.Logger == nil {
+		cfg.Logger = log.New()
+	}
+	return &concreteServer{logger: cfg.Logger, config: cfg}, nil
+}
+
+func (c *concreteServer) Run() error {
+	return nil
+}
+
+func (c *concreteServer) Port() int {
+	return c.config.Port
 }

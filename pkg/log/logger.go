@@ -24,9 +24,9 @@ type logger struct {
 
 func New() Logger {
 	l, _ := zap.NewProduction()
-	return NewWithZap(l)
+	return newWithZap(l)
 }
 
-func NewWithZap(l *zap.Logger) Logger {
+func newWithZap(l *zap.Logger) Logger {
 	return &logger{l.Sugar()}
 }
