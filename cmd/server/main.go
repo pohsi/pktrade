@@ -9,11 +9,13 @@ import (
 	"github.com/pohsi/pktrade/pkg/log"
 )
 
+const Version = "1.0.0"
+
 type Result int
 
 func main() {
 
-	l := log.New()
+	l := log.New().With(nil, "version", Version)
 	flagConfig := flag.String("config", "configs/dev.yml", "path to the config file")
 
 	flag.Parse()

@@ -1,0 +1,3 @@
+server_port: 7777
+jwt_signing_key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+jwt_expiration: 24

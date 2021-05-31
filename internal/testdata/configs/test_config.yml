@@ -1,0 +1,4 @@
+server_port: 7777
+dsn: "postgres://127.0.0.1/pktrade?sslmode=disable&user=postgres&password=postgres"
+jwt_signing_key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+jwt_expiration: 24

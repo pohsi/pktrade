@@ -10,6 +10,8 @@ type Server interface {
 	Run() error
 
 	Port() int
+
+	Logger() *log.Logger
 }
 
 type concreteServer struct {
@@ -32,9 +34,16 @@ func New(cfg Config) (Server, error) {
 }
 
 func (c *concreteServer) Run() error {
+
+	//addr := fmt.Sprintf(":%v", c.config.Port)
+
 	return nil
 }
 
 func (c *concreteServer) Port() int {
 	return c.config.Port
+}
+
+func (c *concreteServer) Logger() *log.Logger {
+	return &c.config.Logger
 }
