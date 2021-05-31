@@ -54,10 +54,10 @@ fmt: ## run "go fmt" on all Go packages
 
 .PHONY: start-db
 start-db: ## start the database
-	@mkdir -p data/postgres
-	docker run --rm --name postgres -v $(shell pwd)/data:/data \
-		-v $(shell pwd)/data/postgres:/var/lib/postgresql/data \
-		-e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=pktrade -d -p 8001:8001 postgres
+	@mkdir -p testdata/postgres
+	docker run --rm --name postgres -v $(shell pwd)/testdata:/testdata \
+		-v $(shell pwd)/testdata/postgres:/var/lib/postgresql/data \
+		-e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=pktrade -d -p 5432:5432 postgres
 
 .PHONY: stop-db
 stop-db: ## stop the database

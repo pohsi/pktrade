@@ -14,7 +14,7 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: pktrade
         ports:
-          - 8001/tcp
+          - 5432/tcp
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
@@ -49,7 +49,7 @@ jobs:
 
       - name: Test
         env:
-          APP_DSN: postgres://127.0.0.1:${{ job.services.postgres.ports[8001] }}/pktrade?sslmode=disable&user=postgres&password=postgres
+          APP_DSN: postgres://127.0.0.1:${{ job.services.postgres.ports[5432] }}/pktrade?sslmode=disable&user=postgres&password=postgres
         run: |
 
       - name: Upload coverage to Codecov
