@@ -2,6 +2,7 @@ VERSION ?= $(shell git describe --tags --always --dirty --match=v* 2> /dev/null 
 LDFLAGS := -ldflags "-X main.Version=${VERSION}"
 MODULE = $(shell go list -m)
 PACKAGES := $(shell go list ./... | grep -v /vendor/)
+GOLINT := ${shell go list -f {{.Target}} golang.org/x/lint/golint}
 
 .PHONY: default
 default: help
@@ -46,10 +47,14 @@ version: ## display the version of the API server
 
 .PHONY: lint
 lint: ## run golint on all Go package
-	@golint $(PACKAGES)
+	@${GOLINT} $(PACKAGES)
+
+.PHONY: vet
+vet: ## run go vet on all Go package
+	@go vet $(PACKAGES)
 
 .PHONY: fmt
-fmt: ## run "go fmt" on all Go packages
+fmt: ## run go fmt on all Go packages
 	@go fmt $(PACKAGES)
 
 .PHONY: start-db

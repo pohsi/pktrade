@@ -22,7 +22,7 @@ func TestLoadAbsenceFile(t *testing.T) {
 }
 
 const (
-	testdataPath = "../testdata/configs/"
+	testdataPath = "../../testdata/configs/"
 )
 
 func TestLoadGoodFile(t *testing.T) {

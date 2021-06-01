@@ -11,8 +11,6 @@ import (
 
 const Version = "1.0.0"
 
-type Result int
-
 func main() {
 
 	l := log.New().With(nil, "version", Version)
