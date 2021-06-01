@@ -22,7 +22,7 @@ func handlerResponseError(c *routing.Context) error {
 }
 
 func handlerResponseHTTPError(c *routing.Context) error {
-	return notFoundError("not found")
+	return NotFoundError("not found")
 }
 
 func handlerPanic(c *routing.Context) error {
@@ -74,7 +74,7 @@ func TestNewHandler(t *testing.T) {
 }
 
 func Test_buildErrorResponce(t *testing.T) {
-	err := notFoundError("")
+	err := NotFoundError("")
 	assert.Equal(t, err, buildErrorResponse(err))
 
 	err = buildErrorResponse(routing.NewHTTPError(http.StatusNotFound))

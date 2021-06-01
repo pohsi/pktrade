@@ -22,43 +22,43 @@ func Test_errorResponce(t *testing.T) {
 	assert.Equal(t, statusCode, e.StatusCode())
 }
 
-func Test_internalServerError(t *testing.T) {
-	res := internalServerError(errorMessage)
+func TestInternalServerError(t *testing.T) {
+	res := InternalServerError(errorMessage)
 	assert.Equal(t, http.StatusInternalServerError, res.StatusCode())
 	assert.Equal(t, errorMessage, res.Error())
-	res = internalServerError("")
+	res = InternalServerError("")
 	assert.NotEmpty(t, res.Error())
 }
 
-func Test_notFoundError(t *testing.T) {
-	res := notFoundError(errorMessage)
+func TestNotFoundError(t *testing.T) {
+	res := NotFoundError(errorMessage)
 	assert.Equal(t, http.StatusNotFound, res.StatusCode())
 	assert.Equal(t, errorMessage, res.Error())
-	res = notFoundError("")
+	res = NotFoundError("")
 	assert.NotEmpty(t, res.Error())
 }
 
-func Test_unauthorizedError(t *testing.T) {
-	res := unauthorizedError(errorMessage)
+func TestUnauthorizedError(t *testing.T) {
+	res := UnauthorizedError(errorMessage)
 	assert.Equal(t, http.StatusUnauthorized, res.StatusCode())
 	assert.Equal(t, errorMessage, res.Error())
-	res = unauthorizedError("")
+	res = UnauthorizedError("")
 	assert.NotEmpty(t, res.Error())
 }
 
 func Test_forbiddenError(t *testing.T) {
-	res := forbiddenError(errorMessage)
+	res := ForbiddenError(errorMessage)
 	assert.Equal(t, http.StatusForbidden, res.StatusCode())
 	assert.Equal(t, errorMessage, res.Error())
-	res = forbiddenError("")
+	res = ForbiddenError("")
 	assert.NotEmpty(t, res.Error())
 }
 
-func Test_badRequestError(t *testing.T) {
-	res := badRequestError(errorMessage)
+func TestBadRequestError(t *testing.T) {
+	res := BadRequestError(errorMessage)
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode())
 	assert.Equal(t, errorMessage, res.Error())
-	res = badRequestError("")
+	res = BadRequestError("")
 	assert.NotEmpty(t, res.Error())
 }
 func Test_invalidInput(t *testing.T) {

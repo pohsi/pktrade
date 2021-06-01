@@ -11,8 +11,8 @@ import (
 func TestAPI(t *testing.T) {
 	logger, _ := log.NewForTest()
 	router := test.MockRouter(logger)
-	RegisterHandler(router, "Test")
-	test.EndPoint(t, router, test.APITestCase{
+	RegisterHandlers(router, "Test")
+	test.Endpoint(t, router, test.APITestCase{
 		Name:         "ok",
 		Method:       "GET",
 		URL:          "/healthcheck",

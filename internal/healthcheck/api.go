@@ -4,7 +4,7 @@ import (
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 )
 
-func RegisterHandler(r *routing.Router, response string) {
+func RegisterHandlers(r *routing.Router, response string) {
 	r.To("GET,HEAD", "/healthcheck", healthyMessage(response))
 }
 

@@ -21,7 +21,7 @@ func (e errorResponse) StatusCode() int {
 	return e.Status
 }
 
-func internalServerError(msg string) errorResponse {
+func InternalServerError(msg string) errorResponse {
 
 	if msg == "" {
 		msg = "Encountered an unknow error"
@@ -33,7 +33,7 @@ func internalServerError(msg string) errorResponse {
 	}
 }
 
-func notFoundError(msg string) errorResponse {
+func NotFoundError(msg string) errorResponse {
 
 	if msg == "" {
 		msg = "The requested resource was not found"
@@ -45,7 +45,7 @@ func notFoundError(msg string) errorResponse {
 	}
 }
 
-func unauthorizedError(msg string) errorResponse {
+func UnauthorizedError(msg string) errorResponse {
 
 	if msg == "" {
 		msg = "Not authennicated to perfoem request action"
@@ -56,7 +56,7 @@ func unauthorizedError(msg string) errorResponse {
 	}
 }
 
-func forbiddenError(msg string) errorResponse {
+func ForbiddenError(msg string) errorResponse {
 
 	if msg == "" {
 		msg = "Not authorized to perfoem request action"
@@ -68,7 +68,7 @@ func forbiddenError(msg string) errorResponse {
 	}
 }
 
-func badRequestError(msg string) errorResponse {
+func BadRequestError(msg string) errorResponse {
 
 	if msg == "" {
 		msg = "Bad request"

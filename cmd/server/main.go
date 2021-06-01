@@ -23,7 +23,7 @@ func main() {
 		os.Exit(-1)
 	}
 
-	s, err := server.New(server.Config{Port: cfg.ServerPort, Logger: l})
+	s, err := server.New(*cfg, l, Version)
 	if err != nil {
 		l.Error(err)
 		os.Exit(-1)

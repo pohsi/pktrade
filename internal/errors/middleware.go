@@ -50,7 +50,7 @@ func buildErrorResponse(err error) errorResponse {
 	case routing.HTTPError:
 		switch err.(routing.HTTPError).StatusCode() {
 		case http.StatusNotFound:
-			return notFoundError("")
+			return NotFoundError("")
 		default:
 			return errorResponse{
 				Status:  err.(routing.HTTPError).StatusCode(),
@@ -60,8 +60,8 @@ func buildErrorResponse(err error) errorResponse {
 	}
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return notFoundError("")
+		return NotFoundError("")
 	}
 
-	return internalServerError("")
+	return InternalServerError("")
 }

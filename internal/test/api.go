@@ -20,7 +20,7 @@ type APITestCase struct {
 	WantResponse string
 }
 
-func EndPoint(t *testing.T, router *routing.Router, tc APITestCase) {
+func Endpoint(t *testing.T, router *routing.Router, tc APITestCase) {
 	t.Run(tc.Name, func(t *testing.T) {
 		req, _ := http.NewRequest(tc.Method, tc.URL, bytes.NewBufferString(tc.Body))
 		if tc.Header != nil {
