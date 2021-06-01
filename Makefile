@@ -51,7 +51,7 @@ lint: ## run golint on all Go package
 
 .PHONY: vet
 vet: ## run go vet on all Go package
-	@go vet $(PACKAGES)
+	@CGO_ENABLED=0 go vet $(PACKAGES)
 
 .PHONY: fmt
 fmt: ## run go fmt on all Go packages

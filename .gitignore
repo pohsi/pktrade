@@ -17,3 +17,6 @@
 
 # Test coverage output
 coverage*.*
+
+# Build output 
+build/*
