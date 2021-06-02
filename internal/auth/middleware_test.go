@@ -15,10 +15,10 @@ import (
 func TestCurrentUser(t *testing.T) {
 	ctx := context.Background()
 	assert.Nil(t, CurrentUser(ctx))
-	ctx = WithUser(ctx, 100, "test")
+	ctx = WithUser(ctx, "100", "test")
 	identity := CurrentUser(ctx)
 	if assert.NotNil(t, identity) {
-		assert.Equal(t, 100, identity.GetID())
+		assert.Equal(t, "100", identity.GetID())
 		assert.Equal(t, "test", identity.GetName())
 	}
 }
@@ -34,14 +34,14 @@ func Test_handleToken(t *testing.T) {
 
 	err := handleToken(ctx, &jwt.Token{
 		Claims: jwt.MapClaims{
-			"id":   100,
+			"id":   "100",
 			"name": "test",
 		},
 	})
 	assert.Nil(t, err)
 	identity := CurrentUser(ctx.Request.Context())
 	if assert.NotNil(t, identity) {
-		assert.Equal(t, 100, identity.GetID())
+		assert.Equal(t, "100", identity.GetID())
 		assert.Equal(t, "test", identity.GetName())
 	}
 }
@@ -60,7 +60,7 @@ func MockAuthHandler(c *routing.Context) error {
 	if c.Request.Header.Get("Authorization") != "TEST" {
 		return errors.UnauthorizedError("")
 	}
-	ctx := WithUser(c.Request.Context(), 100, "Tester")
+	ctx := WithUser(c.Request.Context(), "100", "Tester")
 	c.Request = c.Request.WithContext(ctx)
 	return nil
 }

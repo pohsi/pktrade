@@ -16,7 +16,7 @@ func NewHandler(verificationKey string) routing.Handler {
 func handleToken(c *routing.Context, token *jwt.Token) error {
 	ctx := WithUser(
 		c.Request.Context(),
-		token.Claims.(jwt.MapClaims)["id"].(int),
+		token.Claims.(jwt.MapClaims)["id"].(string),
 		token.Claims.(jwt.MapClaims)["name"].(string),
 	)
 	c.Request = c.Request.WithContext(ctx)
@@ -29,7 +29,7 @@ const (
 	userKey contextKey = iota
 )
 
-func WithUser(ctx context.Context, id int, name string) context.Context {
+func WithUser(ctx context.Context, id string, name string) context.Context {
 	return context.WithValue(ctx, userKey, entity.User{ID: id, Name: name})
 }
 

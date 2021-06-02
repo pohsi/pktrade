@@ -15,7 +15,7 @@ type Service interface {
 }
 
 type Identity interface {
-	GetID() int
+	GetID() string
 
 	GetName() string
 }
@@ -43,7 +43,7 @@ func (s service) authenticate(ctx context.Context, username, password string) Id
 	// For demo purpose
 	if username == "demo" && password == "pass" {
 		logger.Infof("authentication successful")
-		return entity.User{ID: 100, Name: "demo"}
+		return entity.User{ID: "100", Name: "demo"}
 	}
 
 	logger.Infof("authentication failed")

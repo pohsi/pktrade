@@ -41,16 +41,16 @@ const (
 	priceCeilling PriceType = 10
 )
 
-// CreatePurchaseRequest reprsents purchase card by type with given price,
+// CreateOrderRequest reprsents purchase card by type with given price,
 // we are not going to consider quantity
-type CreatePurchaseRequest struct {
-	Id        int `json:"id"`
-	OrderType `json:"order_type"`
-	CardType  `json:"card_type"`
+type CreateOrderRequest struct {
+	Id        int       `json:"id"`
+	OrderType OrderType `json:"order_type"`
+	CardType  CardType  `json:"card_type"`
 	Price     PriceType `json:"price"`
 }
 
-func (c CreatePurchaseRequest) Validate() error {
+func (c CreateOrderRequest) Validate() error {
 	if err := validation.ValidateStruct(&c,
 		validation.Field(&c.OrderType, validation.Required, validation.By(func(v interface{}) error {
 			if val, ok := v.(OrderType); !ok || !(val == OrderPurchase || val == OrderSell) {

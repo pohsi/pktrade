@@ -10,6 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "cwd": "${workspaceFolder}",
+            "env": {"CGO_ENABLED": "0"},
             "program": "${workspaceFolder}/cmd/server",
             "args": ["-config", "${workspaceFolder}/configs/dev.yml"]
         }

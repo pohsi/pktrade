@@ -2,6 +2,7 @@ package trade
 
 import (
 	routing "github.com/go-ozzo/ozzo-routing/v2"
+	"github.com/pohsi/pktrade/internal/errors"
 	"github.com/pohsi/pktrade/pkg/log"
 )
 
@@ -14,14 +15,14 @@ func RegisterHandlers(r *routing.RouteGroup, service Service, authHandler routin
 
 	res := resource{service, logger}
 
-	r.Get("/trades/", res.query)
+	r.Get("/trades", res.query)
 	r.Get("/trades/<type>", res.get)
 	r.Get("/trades/orders", res.query, res.getOrders)
 
 	r.Use(authHandler)
 
 	// the following endpoints require a valid JWT
-	// r.Post("/trades/", res.query, res.makeOrder)
+	r.Post("/trades", res.query, res.makeOrder)
 }
 
 // query returns recent 50 trade records for all cards
@@ -55,6 +56,18 @@ func (r resource) getOrders(c *routing.Context) error {
 	return nil
 }
 
-func (r resource) makeOrders(c *routing.Context) error {
+func (r resource) makeOrder(c *routing.Context) error {
+	var request CreateOrderRequest
+	if err := c.Read(&request); err != nil {
+		r.logger.With(c.Request.Context()).Info(err)
+		return errors.BadRequestError("")
+	}
+
+	r.logger.Infof("CreateOrderRequest: ", request)
+	// order, err := r.service.Create(c.Request.Context(), input)
+	// if err != nil {
+	// 	return err
+	// }
+
 	return nil
 }

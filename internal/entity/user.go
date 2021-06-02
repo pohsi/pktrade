@@ -2,12 +2,12 @@ package entity
 
 // User represents a user.
 type User struct {
-	ID   int
+	ID   string
 	Name string
 }
 
 // GetID returns the user ID.
-func (u User) GetID() int {
+func (u User) GetID() string {
 	return u.ID
 }
 
