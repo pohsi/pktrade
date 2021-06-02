@@ -12,6 +12,7 @@ import (
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 	"github.com/go-ozzo/ozzo-routing/v2/content"
 	"github.com/go-ozzo/ozzo-routing/v2/cors"
+	_ "github.com/lib/pq"
 	"github.com/pohsi/pktrade/internal/auth"
 	"github.com/pohsi/pktrade/internal/config"
 	"github.com/pohsi/pktrade/internal/errors"
@@ -49,7 +50,7 @@ func New(cfg config.Config, logger log.Logger, version string) (Server, error) {
 
 func (c *concreteServer) Run() error {
 
-	db, err := dbx.MustOpen("postgress", c.config.DSN)
+	db, err := dbx.MustOpen("postgres", c.config.DSN)
 	if err != nil {
 		c.logger.Error(err)
 		return err
@@ -138,3 +139,12 @@ func logDBExec(logger log.Logger) dbx.ExecLogFunc {
 		}
 	}
 }
+
+// func initDB(db dbconnection.DB) {
+// 	// CREATE TABLE `users` (`id` int primary key, `name` varchar(255))
+// 	q := db.DB().CreateTable("users", map[string]string{
+// 		"id":   "int primary key",
+// 		"name": "varchar(255)",
+// 	})
+// 	err := q.Execute()
+// }

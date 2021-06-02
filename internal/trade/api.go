@@ -11,16 +11,50 @@ type resource struct {
 }
 
 func RegisterHandlers(r *routing.RouteGroup, service Service, authHandler routing.Handler, logger log.Logger) {
+
 	res := resource{service, logger}
 
-	r.Get("/trade", res.query)
+	r.Get("/trades/", res.query)
+	r.Get("/trades/<type>", res.get)
+	r.Get("/trades/orders", res.query, res.getOrders)
 
 	r.Use(authHandler)
 
 	// the following endpoints require a valid JWT
+	// r.Post("/trades/", res.query, res.makeOrder)
 }
 
+// query returns recent 50 trade records for all cards
 func (r resource) query(c *routing.Context) error {
 
+	r.logger.Infof("Enter trade query")
+
+	records, err := r.service.GetPurchaseOrder(c.Request.Context())
+	if err != nil {
+		return err
+	}
+
+	return c.Write(records)
+}
+
+// query returns recent 50 trade records by card type
+func (r resource) get(c *routing.Context) error {
+
+	// r.logger.Infof("Enter trade get")
+
+	// records, err := r.service.Get(c.Request.Context(), c.Param("type"))
+	// if err != nil {
+	// 	return err
+	// }
+
+	// return c.Write(records)
+	return nil
+}
+
+func (r resource) getOrders(c *routing.Context) error {
+	return nil
+}
+
+func (r resource) makeOrders(c *routing.Context) error {
 	return nil
 }

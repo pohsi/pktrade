@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	defaultServerPort         = 8080 // Server port, defaults to 8080
+	defaultServerPort         = 8001 // Server port, defaults to 8001
 	defaultJWTExpirationHours = 72   // JWT expiration in hours, defaults to 72 hours (3 days)
 )
 

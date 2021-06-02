@@ -183,7 +183,7 @@ func mockLog(format string, args ...interface{}) {
 func mockLookup(name string) (string, bool) {
 	data := map[string]string{
 		"HOST":     "localhost",
-		"PORT":     "8080",
+		"PORT":     "8001",
 		"URL":      "http://example.com",
 		"PASSWORD": "xyz",
 	}
@@ -194,7 +194,7 @@ func mockLookup(name string) (string, bool) {
 func mockLookup2(name string) (string, bool) {
 	data := map[string]string{
 		"APP_HOST":     "localhost",
-		"APP_PORT":     "8080",
+		"APP_PORT":     "8001",
 		"APP_URL":      "http://example.com",
 		"APP_PASSWORD": "xyz",
 	}
@@ -204,7 +204,7 @@ func mockLookup2(name string) (string, bool) {
 
 func mockLookup3(name string) (string, bool) {
 	data := map[string]string{
-		"PORT": "a8080",
+		"PORT": "a8001",
 	}
 	value, ok := data[name]
 	return value, ok
@@ -239,7 +239,7 @@ func TestLoader_Load(t *testing.T) {
 	err := l.Load(&cfg)
 	if assert.Nil(t, err) {
 		assert.Equal(t, "localhost", cfg.Host)
-		assert.Equal(t, 8080, cfg.Port)
+		assert.Equal(t, 8001, cfg.Port)
 		assert.Equal(t, "http://example.com", cfg.URL)
 	}
 
@@ -255,10 +255,10 @@ func TestLoader_Load(t *testing.T) {
 	err = l.Load(&cfg2)
 	if assert.Nil(t, err) {
 		assert.Equal(t, "", cfg2.host)
-		assert.Equal(t, 8080, cfg2.Prt)
+		assert.Equal(t, 8001, cfg2.Prt)
 		assert.Equal(t, "", cfg2.URL)
 		assert.Equal(t, "xyz", cfg2.Password)
-		assert.Equal(t, []string{`set Prt with $PORT="8080"`, `set Password with $PASSWORD="***"`}, logger.logs)
+		assert.Equal(t, []string{`set Prt with $PORT="8001"`, `set Password with $PASSWORD="***"`}, logger.logs)
 	}
 
 	var cfg3 Config1
@@ -291,7 +291,7 @@ func TestLoad(t *testing.T) {
 	err := Load(&cfg)
 	if assert.Nil(t, err) {
 		assert.Equal(t, "localhost", cfg.Host)
-		assert.Equal(t, 8080, cfg.Port)
+		assert.Equal(t, 8001, cfg.Port)
 		assert.Equal(t, "http://example.com", cfg.URL)
 	}
 	loader.lookup = oldLookup

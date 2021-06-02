@@ -5,6 +5,7 @@ import (
 
 	dbx "github.com/go-ozzo/ozzo-dbx"
 	routing "github.com/go-ozzo/ozzo-routing/v2"
+	_ "github.com/lib/pq"
 )
 
 type DB interface {
