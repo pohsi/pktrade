@@ -6,9 +6,9 @@ import (
 
 type Record struct {
 	ID        int       `json:"id"`
-	From      string    `json:"from"`
-	To        string    `json:"to"`
+	FromUser  string    `json:"from_user"`
+	ToUser    string    `json:"to_user"`
 	CreatedAt time.Time `json:"created_at"`
 	CardType  int       `json:"card_type"`
-	Price     int       `json:"price"`
+	Price     float64   `json:"price"`
 }

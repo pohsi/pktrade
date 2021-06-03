@@ -62,20 +62,20 @@ func (c CreateOrderRequest) Validate() error {
 	if err := validation.ValidateStruct(&c,
 		validation.Field(&c.UserId, validation.Required, validation.By(func(v interface{}) error {
 			if val, ok := v.(int); !ok || !(val > 1 && val <= 100000) {
-				return fmt.Errorf("unexcpet card id: %v", v)
+				return fmt.Errorf("unexcpet user id: %v", v)
 			}
 			return nil
 		})),
 		validation.Field(&c.UserName, validation.Required, validation.Length(1, 128)),
 		validation.Field(&c.OrderType, validation.Required, validation.By(func(v interface{}) error {
 			if val, ok := v.(OrderType); !ok || !(val == OrderPurchase || val == OrderSell) {
-				return fmt.Errorf("unexcpet card id: %v", v)
+				return fmt.Errorf("unexcpet order type: %v", v)
 			}
 			return nil
 		})),
 		validation.Field(&c.CardType, validation.Required, validation.By(func(v interface{}) error {
 			if val, ok := v.(CardType); !ok || val >= CardTypeCount {
-				return fmt.Errorf("unexcpet card id: %v", v)
+				return fmt.Errorf("unexcpet card type: %v", v)
 			}
 			return nil
 		})),
@@ -111,6 +111,7 @@ func (s *service) CreateOrder(ctx context.Context, req CreateOrderRequest) (Orde
 	}
 
 	order := entity.Order{
+		OwnerId:   req.UserId,
 		OwnerName: req.UserName,
 		CreatedAt: time.Now(),
 		CardType:  int(req.CardType),
@@ -121,9 +122,7 @@ func (s *service) CreateOrder(ctx context.Context, req CreateOrderRequest) (Orde
 		if err := s.repo.ResolverOrderSell(ctx, order); err != nil {
 			return Order{}, err
 		}
-	}
-
-	if err := s.repo.ResolverOrderPurchase(ctx, order); err != nil {
+	} else if err := s.repo.ResolverOrderPurchase(ctx, order); err != nil {
 		return Order{}, err
 	}
 
