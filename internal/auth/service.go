@@ -2,6 +2,8 @@ package auth
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -41,10 +43,16 @@ func (s service) authenticate(ctx context.Context, username, password string) Id
 	logger := s.logger.With(ctx, "user", username)
 
 	// For demo purpose
-	if username == "demo" && password == "pass" {
+	var id int
+	if _, err := fmt.Sscanf(username, `user%d`, &id); err == nil && password == "pass" && id > 0 && id <= 10000 {
 		logger.Infof("authentication successful")
-		return entity.User{ID: "100", Name: "demo"}
+		return entity.User{ID: strconv.Itoa(id), Name: username}
 	}
+
+	// if username == "demo" && password == "pass" {
+	// 	logger.Infof("authentication successful")
+	// 	return entity.User{ID: "100", Name: "demo"}
+	// }
 
 	logger.Infof("authentication failed")
 	return nil

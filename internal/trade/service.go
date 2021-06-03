@@ -3,14 +3,21 @@ package trade
 import (
 	"context"
 	"fmt"
+	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/pohsi/pktrade/internal/entity"
 	"github.com/pohsi/pktrade/pkg/log"
 )
 
+type Order struct {
+	entity.Order
+}
+
 type Service interface {
-	GetPurchaseOrder(ctx context.Context) ([]entity.PurchaseOrder, error)
+	GetPurchaseOrder(ctx context.Context) ([]Order, error)
+
+	CreateOrder(ctx context.Context, req CreateOrderRequest) (Order, error)
 }
 
 type service struct {
@@ -44,7 +51,8 @@ const (
 // CreateOrderRequest reprsents purchase card by type with given price,
 // we are not going to consider quantity
 type CreateOrderRequest struct {
-	Id        int       `json:"id"`
+	UserId    int       `json:"user_id"`
+	UserName  string    `json:"user_name"`
 	OrderType OrderType `json:"order_type"`
 	CardType  CardType  `json:"card_type"`
 	Price     PriceType `json:"price"`
@@ -52,28 +60,25 @@ type CreateOrderRequest struct {
 
 func (c CreateOrderRequest) Validate() error {
 	if err := validation.ValidateStruct(&c,
+		validation.Field(&c.UserId, validation.Required, validation.By(func(v interface{}) error {
+			if val, ok := v.(int); !ok || !(val > 1 && val <= 100000) {
+				return fmt.Errorf("unexcpet card id: %v", v)
+			}
+			return nil
+		})),
+		validation.Field(&c.UserName, validation.Required, validation.Length(1, 128)),
 		validation.Field(&c.OrderType, validation.Required, validation.By(func(v interface{}) error {
 			if val, ok := v.(OrderType); !ok || !(val == OrderPurchase || val == OrderSell) {
 				return fmt.Errorf("unexcpet card id: %v", v)
 			}
 			return nil
 		})),
-	); err != nil {
-		return err
-	}
-
-	if err := validation.ValidateStruct(&c,
 		validation.Field(&c.CardType, validation.Required, validation.By(func(v interface{}) error {
 			if val, ok := v.(CardType); !ok || val >= CardTypeCount {
 				return fmt.Errorf("unexcpet card id: %v", v)
 			}
 			return nil
 		})),
-	); err != nil {
-		return err
-	}
-
-	if err := validation.ValidateStruct(&c,
 		validation.Field(&c.Price, validation.Required, validation.By(func(v interface{}) error {
 			if val, ok := v.(PriceType); !ok || val < priceFloor || val > priceCeilling {
 				return fmt.Errorf("unexcpet price: %v", v)
@@ -92,6 +97,28 @@ func NewService(repo Repository, logger log.Logger) Service {
 }
 
 // Query returns recent 50 trade records for all cards.
-func (s *service) GetPurchaseOrder(ctx context.Context) ([]entity.PurchaseOrder, error) {
+func (s *service) GetPurchaseOrder(ctx context.Context) ([]Order, error) {
+
+	// if err := req.Validate(); err != nil {
+	// 	return Order{}, err
+	// }
 	return nil, nil
+}
+
+func (s *service) CreateOrder(ctx context.Context, req CreateOrderRequest) (Order, error) {
+	if err := req.Validate(); err != nil {
+		return Order{}, err
+	}
+
+	order := entity.Order{
+		Owner:     req.UserName,
+		CreatedAt: time.Now(),
+		CardType:  int(req.CardType),
+		Price:     int(req.Price),
+	}
+
+	// if err := s.repo.CreateOrder(ctx, order); err != nil {
+	// 	return nil, err
+	// }
+	return Order{order}, nil
 }

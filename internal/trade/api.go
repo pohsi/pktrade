@@ -1,7 +1,10 @@
 package trade
 
 import (
+	"strconv"
+
 	routing "github.com/go-ozzo/ozzo-routing/v2"
+	"github.com/pohsi/pktrade/internal/auth"
 	"github.com/pohsi/pktrade/internal/errors"
 	"github.com/pohsi/pktrade/pkg/log"
 )
@@ -22,13 +25,13 @@ func RegisterHandlers(r *routing.RouteGroup, service Service, authHandler routin
 	r.Use(authHandler)
 
 	// the following endpoints require a valid JWT
-	r.Post("/trades", res.query, res.makeOrder)
+	r.Post("/trades", res.query, res.makeTrade)
 }
 
 // query returns recent 50 trade records for all cards
 func (r resource) query(c *routing.Context) error {
 
-	r.logger.Infof("Enter trade query")
+	r.logger.Info("Enter trade query")
 
 	records, err := r.service.GetPurchaseOrder(c.Request.Context())
 	if err != nil {
@@ -56,18 +59,27 @@ func (r resource) getOrders(c *routing.Context) error {
 	return nil
 }
 
-func (r resource) makeOrder(c *routing.Context) error {
+func (r resource) makeTrade(c *routing.Context) error {
+
 	var request CreateOrderRequest
 	if err := c.Read(&request); err != nil {
 		r.logger.With(c.Request.Context()).Info(err)
 		return errors.BadRequestError("")
 	}
+	user := auth.CurrentUser(c.Request.Context())
+	if uid, err := strconv.Atoi(user.GetID()); err != nil {
+		r.logger.With(c.Request.Context()).Info(err)
+		return errors.BadRequestError("")
+	} else {
+		request.UserId = uid
+	}
 
-	r.logger.Infof("CreateOrderRequest: ", request)
-	// order, err := r.service.Create(c.Request.Context(), input)
-	// if err != nil {
-	// 	return err
-	// }
+	request.UserName = user.GetName()
 
-	return nil
+	order, err := r.service.CreateOrder(c.Request.Context(), request)
+	if err != nil {
+		return err
+	}
+
+	return c.Write(order)
 }

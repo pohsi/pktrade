@@ -11,12 +11,12 @@ import (
 )
 
 type mockRespository struct {
-	purchaseOrder []entity.PurchaseOrder
-	sellOrder     []entity.SellOrder
-	records       []entity.Records
+	purchaseOrder []entity.Order
+	sellOrder     []entity.Order
+	records       []entity.Record
 }
 
-func (m *mockRespository) GetPurchaseOrder() ([]entity.PurchaseOrder, error) {
+func (m *mockRespository) GetPurchaseOrder() ([]Order, error) {
 	return m.GetPurchaseOrder()
 }
 

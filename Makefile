@@ -4,6 +4,10 @@ MODULE = $(shell go list -m)
 PACKAGES := $(shell go list ./... | grep -v /vendor/)
 GOLINT := ${shell go list -f {{.Target}} golang.org/x/lint/golint}
 
+CONFIG_FILE ?= ./configs/dev.yml
+APP_DSN ?= $(shell sed -n 's/^dsn:[[:space:]]*"\(.*\)"/\1/p' $(CONFIG_FILE))
+MIGRATE := docker run -v $(shell pwd)/migrations:/migrations --network host migrate/migrate:v4.10.0 -path=/migrations/ -database "$(APP_DSN)"
+
 .PHONY: default
 default: help
 
@@ -57,6 +61,12 @@ vet: ## run go vet on all Go package
 fmt: ## run go fmt on all Go packages
 	@go fmt $(PACKAGES)
 
+.PHONY: testdata
+testdata: ## populate the database with test data
+	make migrate-reset
+	@echo "Populating test data..."
+	@docker exec -it postgres psql "$(APP_DSN)" -f ./testdata/sql/testdata.sql
+
 .PHONY: start-db
 start-db: ## start the database
 	@mkdir -p testdata/postgres
@@ -67,3 +77,27 @@ start-db: ## start the database
 .PHONY: stop-db
 stop-db: ## stop the database
 	docker stop postgres
+
+.PHONY: migrate
+migrate: ## run all new database migrations
+	@echo "Running all new database migrations..."
+	@$(MIGRATE) up
+
+.PHONY: migrate-down
+migrate-down: ## revert database to the last migration step
+	@echo "Reverting database to the last migration step..."
+	@$(MIGRATE) down 1
+
+.PHONY: migrate-new
+migrate-new: ## create a new database migration
+	@read -p "Enter the name of the new migration: " name; \
+	$(MIGRATE) create -ext sql -dir /migrations/ $${name// /_}
+
+.PHONY: migrate-reset
+migrate-reset: ## reset database and re-run all migrations
+	@echo "Resetting database..."
+	@$(MIGRATE) drop
+	@echo "Running all database migrations..."
+	@$(MIGRATE) up
+
+
