@@ -1,1 +1,1 @@
-DROP TABLE card_order, record, player
+DROP TABLE card_purchase, card_sell, record, player

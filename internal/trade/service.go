@@ -111,14 +111,21 @@ func (s *service) CreateOrder(ctx context.Context, req CreateOrderRequest) (Orde
 	}
 
 	order := entity.Order{
-		Owner:     req.UserName,
+		OwnerName: req.UserName,
 		CreatedAt: time.Now(),
 		CardType:  int(req.CardType),
-		Price:     int(req.Price),
+		Price:     float64(req.Price),
 	}
 
-	// if err := s.repo.CreateOrder(ctx, order); err != nil {
-	// 	return nil, err
-	// }
+	if req.OrderType == OrderSell {
+		if err := s.repo.ResolverOrderSell(ctx, order); err != nil {
+			return Order{}, err
+		}
+	}
+
+	if err := s.repo.ResolverOrderPurchase(ctx, order); err != nil {
+		return Order{}, err
+	}
+
 	return Order{order}, nil
 }

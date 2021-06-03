@@ -1,6 +1,7 @@
 package trade
 
 import (
+	"context"
 	"testing"
 
 	"github.com/pohsi/pktrade/internal/test"
@@ -18,6 +19,14 @@ type mockRespository struct {
 
 func (m *mockRespository) GetPurchaseOrder() ([]Order, error) {
 	return m.GetPurchaseOrder()
+}
+
+func (m *mockRespository) ResolverOrderSell(c context.Context, order entity.Order) error {
+	return nil
+}
+
+func (m *mockRespository) ResolverOrderPurchase(c context.Context, order entity.Order) error {
+	return nil
 }
 
 func TestAPI(t *testing.T) {
