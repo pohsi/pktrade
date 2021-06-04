@@ -38,7 +38,7 @@ type concreteServer struct {
 	version string
 }
 
-// New creates server instance wich takes custom logger
+// New creates server instance which takes custom logger
 func New(cfg config.Config, logger log.Logger, version string) (Server, error) {
 
 	if logger == nil {

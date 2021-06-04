@@ -68,7 +68,7 @@ func (p *Pages) Offset() int {
 	return (p.Page - 1) * p.PerPage
 }
 
-// Limit retuns the limitation value can be used in a SQL statement
+// Limit returns the limitation value can be used in a SQL statement
 func (p *Pages) Limit() int {
 	return p.PerPage
 }

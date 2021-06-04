@@ -12,20 +12,20 @@ func TestNew(t *testing.T) {
 		page, perPage, total                                                   int
 		expectedPage, expectedPerPage, expectedTotal, pageCount, offset, limit int
 	}{
-		// varing page
+		// varying page
 		{"t1", 1, 20, 50, 1, 20, 50, 3, 0, 20},
 		{"t2", 2, 20, 50, 2, 20, 50, 3, 20, 20},
 		{"t3", 3, 20, 50, 3, 20, 50, 3, 40, 20},
 		{"t4", 4, 20, 50, 3, 20, 50, 3, 40, 20},
 		{"t5", 0, 20, 50, 1, 20, 50, 3, 0, 20},
 
-		// varing perPage
+		// varying perPage
 		{"t6", 1, 0, 50, 1, 100, 50, 1, 0, 100},
 		{"t7", 1, -1, 50, 1, 100, 50, 1, 0, 100},
 		{"t8", 1, 100, 50, 1, 100, 50, 1, 0, 100},
 		{"t9", 1, 1001, 50, 1, 1000, 50, 1, 0, 1000},
 
-		// varing total
+		// varying total
 		{"t10", 1, 20, 0, 1, 20, 0, 0, 0, 20},
 		{"t10", 1, 20, -1, 1, 20, -1, -1, 0, 20},
 	}
