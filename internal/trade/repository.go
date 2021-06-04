@@ -12,7 +12,13 @@ import (
 )
 
 type Repository interface {
-	GetPurchaseOrder() ([]Order, error)
+	GetUserRecords(c context.Context, userName string, limit int) ([]entity.Record, error)
+
+	GetUserSellOrders(c context.Context, userName string, limit int) ([]entity.Order, error)
+
+	GetUserPurchaseOrders(c context.Context, userName string, limit int) ([]entity.Order, error)
+
+	GetRecordsByCardType(c context.Context, cardType int, limit int) ([]entity.Record, error)
 
 	ResolverOrderSell(c context.Context, order entity.Order) error
 
@@ -33,10 +39,70 @@ func NewRepository(db dbconnection.DB, logger log.Logger) Repository {
 	return &repository{db, logger}
 }
 
-func (r *repository) GetPurchaseOrder() ([]Order, error) {
-	// var count int
-	// err := r.db.With(ctx).Select("COUNT(*)").From("album").Row(&count)
-	return []Order{}, nil
+// GetRecords queries order records where user name equal to from_user or to_user
+func (r *repository) GetUserRecords(c context.Context, userName string, limit int) ([]entity.Record, error) {
+	var records []entity.Record
+	err := r.db.With(c).
+		Select().
+		OrderBy().
+		From("record").
+		Where(dbx.Or(
+			dbx.NewExp(`from_user={:name}`, dbx.Params{"name": userName}),
+			dbx.NewExp(`to_user={:name}`, dbx.Params{"name": userName}),
+		)).
+		OrderBy("created_at DESC").
+		Limit(int64(limit)).
+		All(&records)
+
+	return records, err
+}
+
+func (r *repository) GetUserSellOrders(c context.Context, userName string, limit int) ([]entity.Order, error) {
+	var orders []entity.Order
+	err := r.db.With(c).
+		Select().
+		OrderBy().
+		From("card_sell").
+		Where(dbx.Or(
+			dbx.NewExp(`owner_name={:name}`, dbx.Params{"name": userName}),
+		)).
+		OrderBy("created_at DESC").
+		Limit(int64(limit)).
+		All(&orders)
+
+	return orders, err
+}
+
+func (r *repository) GetUserPurchaseOrders(c context.Context, userName string, limit int) ([]entity.Order, error) {
+	var orders []entity.Order
+	err := r.db.With(c).
+		Select().
+		OrderBy().
+		From("card_purchase").
+		Where(dbx.Or(
+			dbx.NewExp(`owner_name={:name}`, dbx.Params{"name": userName}),
+		)).
+		OrderBy("created_at DESC").
+		Limit(int64(limit)).
+		All(&orders)
+
+	return orders, err
+}
+
+func (r *repository) GetRecordsByCardType(c context.Context, cardType int, limit int) ([]entity.Record, error) {
+	var records []entity.Record
+	err := r.db.With(c).
+		Select().
+		OrderBy().
+		From("record").
+		Where(
+			dbx.NewExp(`card_type={:type}`, dbx.Params{"type": cardType}),
+		).
+		OrderBy("created_at DESC").
+		Limit(int64(limit)).
+		All(&records)
+
+	return records, err
 }
 
 type card_purchase struct {

@@ -39,7 +39,9 @@ func Test_serviceCRUD(t *testing.T) {
 	s := NewService(&mockRespository{}, logger)
 
 	ctx := context.Background()
-
-	s.GetPurchaseOrder(ctx)
+	s.GetRecords(ctx, GetRecordsRequest{
+		UserId:   16,
+		UserName: `user16`,
+	})
 
 }

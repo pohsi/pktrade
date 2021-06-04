@@ -17,12 +17,24 @@ type mockRespository struct {
 	records       []entity.Record
 }
 
-func (m *mockRespository) GetPurchaseOrder() ([]Order, error) {
-	return m.GetPurchaseOrder()
+func (m *mockRespository) GetUserRecords(c context.Context, userName string, limit int) ([]entity.Record, error) {
+	return m.records, nil
+}
+
+func (m *mockRespository) GetUserSellOrders(c context.Context, userName string, limit int) ([]entity.Order, error) {
+	return nil, nil
+}
+
+func (m *mockRespository) GetUserPurchaseOrders(c context.Context, userName string, limit int) ([]entity.Order, error) {
+	return nil, nil
 }
 
 func (m *mockRespository) ResolverOrderSell(c context.Context, order entity.Order) error {
 	return nil
+}
+
+func (m *mockRespository) GetRecordsByCardType(c context.Context, cardType int, limit int) ([]entity.Record, error) {
+	return nil, nil
 }
 
 func (m *mockRespository) ResolverOrderPurchase(c context.Context, order entity.Order) error {

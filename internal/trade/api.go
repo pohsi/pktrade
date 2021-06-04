@@ -18,22 +18,39 @@ func RegisterHandlers(r *routing.RouteGroup, service Service, authHandler routin
 
 	res := resource{service, logger}
 
-	r.Get("/trades", res.query)
-	r.Get("/trades/<type>", res.get)
-	r.Get("/trades/orders", res.query, res.getOrders)
+	r.Get("/trades/records/<type>", res.queryRecordByType)
 
 	r.Use(authHandler)
 
 	// the following endpoints require a valid JWT
-	r.Post("/trades", res.query, res.makeTrade)
+	r.Put("/trades/status/<type>", res.queryRecord)
+	r.Post("/trades", res.makeTrade)
 }
 
+const gerRecordsLimit int = 50
+
 // query returns recent 50 trade records for all cards
-func (r resource) query(c *routing.Context) error {
+func (r resource) queryRecord(c *routing.Context) error {
 
-	r.logger.Info("Enter trade query")
+	queryType, err := strconv.Atoi(c.Param("type"))
+	if err != nil {
+		return err
+	}
 
-	records, err := r.service.GetPurchaseOrder(c.Request.Context())
+	user := auth.CurrentUser(c.Request.Context())
+	req := GetRecordsRequest{
+		UserName:  user.GetName(),
+		Limit:     gerRecordsLimit,
+		QueryType: queryType,
+	}
+	if uid, err := strconv.Atoi(user.GetID()); err != nil {
+		r.logger.With(c.Request.Context()).Info(err)
+		return errors.BadRequestError("")
+	} else {
+		req.UserId = uid
+	}
+
+	records, err := r.service.GetRecords(c.Request.Context(), req)
 	if err != nil {
 		return err
 	}
@@ -42,21 +59,22 @@ func (r resource) query(c *routing.Context) error {
 }
 
 // query returns recent 50 trade records by card type
-func (r resource) get(c *routing.Context) error {
+func (r resource) queryRecordByType(c *routing.Context) error {
 
-	// r.logger.Infof("Enter trade get")
+	cardType, err := strconv.Atoi(c.Param("type"))
+	if err != nil {
+		return err
+	}
 
-	// records, err := r.service.Get(c.Request.Context(), c.Param("type"))
-	// if err != nil {
-	// 	return err
-	// }
+	records, err := r.service.GetRecordsByCardType(c.Request.Context(), GetRecordsByCardTypeRequest{
+		CardType: CardType(cardType),
+		Limit:    gerRecordsLimit,
+	})
+	if err != nil {
+		return err
+	}
 
-	// return c.Write(records)
-	return nil
-}
-
-func (r resource) getOrders(c *routing.Context) error {
-	return nil
+	return c.Write(records)
 }
 
 func (r resource) makeTrade(c *routing.Context) error {

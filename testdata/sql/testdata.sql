@@ -21,6 +21,7 @@ VALUES (338, 'user338', '2021-06-03 05:22:37'::TIMESTAMP, 4, 9.6),
 INSERT INTO record(from_user, to_user, created_at, card_type, price)
 VALUES ('user61'  ,'user37',  '2021-05-11 14:41:17'::TIMESTAMP, 1, 6.1),
        ('user192' ,'user765', '2021-06-01 21:35:05'::TIMESTAMP, 2, 3.32),
+       ('user37'  ,'user579', '2021-06-04 01:55:05'::TIMESTAMP, 4, 8.05),
        ('user3'   ,'user16',  '2021-05-23 01:12:31'::TIMESTAMP, 2, 4.73);
 
 
