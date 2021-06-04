@@ -87,7 +87,7 @@ func Test_parseInt(t *testing.T) {
 	for _, v := range data {
 		t.Run(v.name, func(t *testing.T) {
 			if r := parseInt(v.value, v.defaultValue); r != v.want {
-				t.Errorf("parseInt() = %v, wnat %v", r, v.want)
+				t.Errorf("parseInt() = %v, want %v", r, v.want)
 			}
 		})
 	}
