@@ -12,7 +12,6 @@ import (
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 	"github.com/go-ozzo/ozzo-routing/v2/content"
 	"github.com/go-ozzo/ozzo-routing/v2/cors"
-	_ "github.com/lib/pq"
 	"github.com/pohsi/pktrade/internal/auth"
 	"github.com/pohsi/pktrade/internal/config"
 	"github.com/pohsi/pktrade/internal/errors"

@@ -4,6 +4,7 @@ import (
 	"flag"
 	"os"
 
+	_ "github.com/lib/pq"
 	"github.com/pohsi/pktrade/internal/config"
 	"github.com/pohsi/pktrade/internal/server"
 	"github.com/pohsi/pktrade/pkg/log"
