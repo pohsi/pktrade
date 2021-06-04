@@ -44,7 +44,6 @@ func (r resource) queryRecord(c *routing.Context) error {
 		QueryType: queryType,
 	}
 	if uid, err := strconv.Atoi(user.GetID()); err != nil {
-		r.logger.With(c.Request.Context()).Info(err)
 		return errors.BadRequestError("")
 	} else {
 		req.UserId = uid
@@ -81,12 +80,10 @@ func (r resource) makeTrade(c *routing.Context) error {
 
 	var request CreateOrderRequest
 	if err := c.Read(&request); err != nil {
-		r.logger.With(c.Request.Context()).Info(err)
 		return errors.BadRequestError("")
 	}
 	user := auth.CurrentUser(c.Request.Context())
 	if uid, err := strconv.Atoi(user.GetID()); err != nil {
-		r.logger.With(c.Request.Context()).Info(err)
 		return errors.BadRequestError("")
 	} else {
 		request.UserId = uid
